@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | PrintBridge-PaaS</title>
+  <link rel="icon" type="image/png" href="P2P_FAVICON.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared-nav.css">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --ink-muted: #7a7a7a;
+      --paper: #faf9f6;
+      --cream: #f2efe8;
+      --rule: #d8d4c8;
+      --saffron: #d97706;
+      --green: #059669;
+      --navy: #1e293b;
+      --gold: #ca8a04;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 100px 20px 40px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .team-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle { font-size: 16px; color: var(--ink-soft); }
+
+    .live-badge {
+      display: inline-block;
+      background: var(--green);
+      color: white;
+      padding: 4px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-left: 12px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Login Styles */
+    .login-container {
+      max-width: 400px;
+      margin: 80px auto;
+      background: var(--cream);
+      border: 2px solid var(--rule);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .login-container h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--navy);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 16px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--saffron);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #b45309;
+    }
+
+    .btn-secondary {
+      background: var(--navy);
+      color: white;
+      margin-top: 12px;
+    }
+
+    .btn-secondary:hover {
+      background: #0f172a;
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border: 1px solid #fecaca;
+      display: none;
+    }
+
+    .success-message {
+      background: #d1fae5;
+      color: #059669;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border: 1px solid #a7f3d0;
+      display: none;
+    }
+
+    .logout-btn {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      padding: 10px 20px;
+      background: var(--ink-soft);
+      color: white;
+      border: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      z-index: 100;
+    }
+
+    .logout-btn:hover {
+      background: var(--ink);
+    }
+
+    /* Control Panels */
+    .control-panel {
+      background: var(--cream);
+      border: 2px solid var(--saffron);
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .control-panel h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    .status-display {
+      background: var(--paper);
+      padding: 16px;
+      margin: 16px 0;
+      border: 1px solid var(--rule);
+      text-align: center;
+    }
+
+    .status-display .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+
+    .status-display .value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+
+    /* Charts */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .chart-container {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      padding: 20px;
+      transition: border-color 0.2s ease;
+    }
+
+    .chart-container:hover {
+      border-color: var(--ink-muted);
+    }
+
+    .chart-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    iframe {
+      width: 100%;
+      height: 260px;
+      border: none;
+      background: var(--paper);
+    }
+
+    /* Jobs Section */
+    .section-header {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 48px 0 24px;
+      padding-top: 48px;
+      border-top: 2px solid var(--rule);
+      text-align: center;
+    }
+
+    .jobs-container { display: grid; gap: 16px; margin-bottom: 32px; }
+
+    .job {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      padding: 24px;
+      transition: border-color 0.2s ease;
+    }
+
+    .job:hover { border-color: var(--ink-muted); }
+    .job.paid { border-left: 3px solid var(--green); }
+    .job.pending { border-left: 3px solid var(--gold); }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .job-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .badges { display: flex; gap: 8px; }
+
+    .status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid;
+    }
+
+    .status.paid { background: #f0fdf4; border-color: var(--green); color: var(--green); }
+    .status.unpaid { background: #fffbeb; border-color: var(--gold); color: var(--gold); }
+    .status.approved { background: #eff6ff; border-color: #3b82f6; color: #3b82f6; }
+
+    .job-details {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    .no-jobs {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-muted);
+      font-size: 15px;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 84px 16px 24px; }
+      h1 { font-size: 32px; }
+      .charts-grid { grid-template-columns: 1fr; }
+      .job { padding: 20px; }
+      .logout-btn { top: 70px; right: 10px; padding: 8px 12px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Section -->
+  <div id="login-section" class="login-container">
+    <h2>🔐 Admin Login</h2>
+    <p style="color: var(--ink-soft); margin-bottom: 24px;">
+      Enter your credentials to access the admin dashboard
+    </p>
+    
+    <div id="login-error" class="error-message"></div>
+    
+    <div class="form-group">
+      <label for="admin-username">Username</label>
+      <input type="text" id="admin-username" placeholder="admin" autocomplete="username">
+    </div>
+    
+    <div class="form-group">
+      <label for="admin-password">Password</label>
+      <input type="password" id="admin-password" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    
+    <button class="btn btn-primary" onclick="adminLogin()">Login</button>
+  </div>
+
+  <!-- Admin Content (Hidden until logged in) -->
+  <div id="admin-content" style="display: none;">
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    
+    <div class="container">
+      <header>
+        <div class="team-label">Team VPS</div>
+        <h1>Admin Dashboard</h1>
+        <p class="subtitle">
+          Complete System Control & Analytics
+          <span class="live-badge">● Live</span>
+        </p>
+      </header>
+
+      <!-- Shop Status Control -->
+      <div class="control-panel">
+        <h3>🏪 Shop Status Control</h3>
+        <p style="font-size: 14px; color: var(--ink-soft); margin-bottom: 16px;">
+          Manually control when the shop is open or closed
+        </p>
+        
+        <div class="status-display">
+          <div class="label">Current Status</div>
+          <div class="value" id="current-shop-status" style="color: var(--green);">🟢 OPEN</div>
+        </div>
+        
+        <div id="shop-status-message" class="success-message"></div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+          <button class="btn btn-secondary" onclick="manualShopControl('open')" style="background: var(--green);">
+            🟢 Open Shop
+          </button>
+          <button class="btn btn-secondary" onclick="manualShopControl('close')" style="background: #dc2626;">
+            🔴 Close Shop
+          </button>
+        </div>
+      </div>
+
+      <!-- Password Management -->
+      <div class="control-panel">
+        <h3>🔑 Password of the Day</h3>
+        <p style="font-size: 14px; color: var(--ink-soft); margin-bottom: 16px;">
+          Customers must enter this password to upload files
+        </p>
+        
+        <div class="status-display">
+          <div class="label">Current Password</div>
+          <div class="value" id="current-password-display" style="color: var(--saffron);">2323</div>
+        </div>
+        
+        <div id="password-message" class="success-message"></div>
+        
+        <div class="form-group">
+          <label for="new-password">Update Password</label>
+          <input type="text" id="new-password" placeholder="Enter new password (min 4 characters)">
+        </div>
+        
+        <button class="btn btn-secondary" onclick="updateDailyPassword()">Update Password</button>
+      </div>
+
+      <!-- Latest Ticket Number - Featured -->
+      <div style="background: var(--cream); border: 2px solid var(--saffron); padding: 32px; margin-bottom: 32px; text-align: center;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--saffron); margin-bottom: 12px;">
+          Latest Ticket Number
+        </div>
+        <div id="latest-ticket-display" style="
+          font-family: 'Playfair Display', serif;
+          font-size: 72px;
+          font-weight: 700;
+          color: var(--navy);
+          margin: 24px 0;
+          letter-spacing: -2px;
+        ">
+          <span id="ticket-number">—</span>
+        </div>
+        <p style="font-size: 13px; color: var(--ink-soft);">
+          Most recent ticket issued • Updates every 15 seconds
+        </p>
+      </div>
+
+      <!-- Analytics Charts -->
+      <div class="charts-grid">
+        <div class="chart-container">
+          <div class="chart-title">Total Jobs (Today)</div>
+          <iframe src="https://thingspeak.com/channels/3373847/charts/1?bgcolor=%23f2efe8&color=%231e293b&dynamic=true&results=60&type=line&update=15&title=Total+Jobs"></iframe>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-title">Pages Printed (Today)</div>
+          <iframe src="https://thingspeak.com/channels/3373847/charts/2?bgcolor=%23f2efe8&color=%231e293b&dynamic=true&results=60&type=line&update=15&title=Total+Pages"></iframe>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-title">Revenue (₹)</div>
+          <iframe src="https://thingspeak.com/channels/3373847/charts/3?bgcolor=%23f2efe8&color=%23059669&dynamic=true&results=60&type=line&update=15&title=Revenue"></iframe>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-title">Print Queue Length</div>
+          <iframe src="https://thingspeak.com/channels/3373847/charts/4?bgcolor=%23f2efe8&color=%23d97706&dynamic=true&results=60&type=line&update=15&title=Queue+Length"></iframe>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-title">Color Print Ratio (%)</div>
+          <iframe src="https://thingspeak.com/channels/3373847/charts/5?bgcolor=%23f2efe8&color=%239333ea&dynamic=true&results=60&type=line&update=15&title=Color+Ratio"></iframe>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-title">Printer Status</div>
+          <iframe src="https://thingspeak.com/channels/3373847/charts/7?bgcolor=%23f2efe8&color=%23dc2626&dynamic=true&results=60&type=line&update=15&title=Printer+Status"></iframe>
+          <p style="text-align: center; font-size: 12px; color: var(--ink-muted); margin-top: 8px;">
+            0 = Idle, 1 = Printing, 2 = Error
+          </p>
+        </div>
+      </div>
+
+      <!-- Job Monitoring Section -->
+      <h2 class="section-header">📋 Job Monitoring</h2>
+      <div class="jobs-container" id="jobs"></div>
+
+      <!-- Footer -->
+      <div style="margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--rule); text-align: center;">
+        <p style="font-size: 13px; color: var(--ink-muted);">
+          <strong style="color: var(--navy);">PrintBridge-PaaS</strong> — IoT Cloud Printing System by Team VPS
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared-nav.js"></script>
+  <script src="thingspeak-admin-login.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Fetch and display latest ticket number from ThingSpeak
+    async function fetchLatestTicket() {
+      try {
+        const response = await fetch('https://api.thingspeak.com/channels/3373847/fields/6/last.json');
+        const data = await response.json();
+        
+        if (data && data.field6) {
+          document.getElementById('ticket-number').textContent = data.field6;
+        }
+      } catch (error) {
+        console.error('Error fetching ticket number:', error);
+      }
+    }
+    
+    // Update ticket number every 15 seconds
+    fetchLatestTicket();
+    setInterval(fetchLatestTicket, 15000);
+  </script>
+</body>
+</html>

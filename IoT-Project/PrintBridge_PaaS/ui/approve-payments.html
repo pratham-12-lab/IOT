@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Approval | PrintBridge-PaaS</title>
+  <link rel="icon" type="image/png" href="P2P_FAVICON.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --ink-muted: #7a7a7a;
+      --paper: #faf9f6;
+      --cream: #f2efe8;
+      --rule: #d8d4c8;
+      --saffron: #d97706;
+      --green: #059669;
+      --navy: #1e293b;
+      --gold: #ca8a04;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .team-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle { font-size: 16px; color: var(--ink-soft); }
+
+    button {
+      padding: 12px 24px;
+      background: var(--navy);
+      color: var(--paper);
+      border: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    button:hover { background: var(--ink); }
+    button:disabled { background: var(--rule); color: var(--ink-muted); cursor: not-allowed; }
+
+    .controls { margin-bottom: 32px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--cream);
+      padding: 28px 24px;
+      text-align: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .stat-card:hover { background: var(--paper); }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .jobs-container { display: grid; gap: 16px; }
+
+    .job-card {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      padding: 28px;
+      transition: border-color 0.2s ease;
+    }
+
+    .job-card:hover { border-color: var(--ink-muted); }
+    .job-card.paid { border-left: 2px solid var(--green); }
+    .job-card.pending { border-left: 2px solid var(--gold); }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .job-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .badges { display: flex; gap: 8px; }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid;
+    }
+
+    .badge.paid { background: #f0fdf4; border-color: var(--green); color: var(--green); }
+    .badge.unpaid { background: #fffbeb; border-color: var(--gold); color: var(--gold); }
+    .badge.approved { background: #eff6ff; border-color: #3b82f6; color: #3b82f6; }
+    .badge.pending { background: var(--cream); border-color: var(--rule); color: var(--ink-soft); }
+    .badge.printed { background: #f3e8ff; border-color: #9333ea; color: #9333ea; }
+
+    .job-details {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+
+    .detail-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--ink-muted);
+    }
+
+    .detail-value { color: var(--ink); font-weight: 600; }
+
+    .job-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .job-actions button { flex: 1; padding: 10px 16px; }
+    .btn-approve { background: var(--green); }
+    .btn-approve:hover { background: #047857; }
+    .btn-reject { background: #dc2626; }
+    .btn-reject:hover { background: #b91c1c; }
+
+    .no-jobs {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-muted);
+      font-size: 15px;
+    }
+
+    .ready-status { color: var(--green); font-weight: 600; font-size: 14px; }
+
+    @media (max-width: 768px) {
+      body { padding: 24px 16px; }
+      h1 { font-size: 32px; }
+      .job-card { padding: 20px; }
+      .job-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="team-label">Team VPS</div>
+      <h1>Payment Approval</h1>
+      <p class="subtitle">Administrative Dashboard</p>
+    </header>
+
+    <div style="display: flex; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px;">
+      <a href="index.html" style="flex: 1; padding: 12px 20px; background: var(--cream); color: var(--ink); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: background-color 0.2s ease;">Admin Panel</a>
+      <a href="thingspeak-admin.html" style="flex: 1; padding: 12px 20px; background: var(--cream); color: var(--ink); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: background-color 0.2s ease;">Admin Analytics</a>
+      <a href="customer.html" style="flex: 1; padding: 12px 20px; background: var(--cream); color: var(--ink); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: background-color 0.2s ease;">Customer Portal</a>
+      <a href="about.html" style="flex: 1; padding: 12px 20px; background: var(--cream); color: var(--ink); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: background-color 0.2s ease;">About</a>
+    </div>
+
+    <div class="controls">
+      <button onclick="loadJobs()">Refresh Jobs</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalJobs">0</div>
+        <div class="stat-label">Total Jobs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="pendingPayments">0</div>
+        <div class="stat-label">Pending Payments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="approvedJobs">0</div>
+        <div class="stat-label">Approved Jobs</div>
+      </div>
+    </div>
+
+    <div class="jobs-container" id="jobsContainer"></div>
+
+    <!-- Navigation Footer -->
+    <div style="margin-top: 64px; padding-top: 48px; border-top: 2px solid var(--rule);">
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: var(--navy); text-align: center; margin-bottom: 24px;">
+        Explore PrintBridge-PaaS
+      </h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 32px;">
+        <a href="index.html" style="padding: 16px 20px; background: var(--paper); color: var(--ink); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: background-color 0.2s ease; border-left: 3px solid var(--saffron);">
+          <div style="font-size: 20px; margin-bottom: 8px;">🔐</div>
+          <div>Admin Panel</div>
+          <div style="font-size: 9px; color: var(--ink-muted); margin-top: 4px;">Job Monitoring</div>
+        </a>
+        <a href="thingspeak-admin.html" style="padding: 16px 20px; background: var(--cream); color: var(--ink); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: background-color 0.2s ease;">
+          <div style="font-size: 20px; margin-bottom: 8px;">📊</div>
+          <div>Admin Analytics</div>
+          <div style="font-size: 9px; color: var(--ink-muted); margin-top: 4px;">Full Metrics</div>
+        </a>
+        <a href="customer.html" style="padding: 16px 20px; background: var(--cream); color: var(--ink); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: background-color 0.2s ease;">
+          <div style="font-size: 20px; margin-bottom: 8px;">🖨️</div>
+          <div>Customer Portal</div>
+          <div style="font-size: 9px; color: var(--ink-muted); margin-top: 4px;">Test Experience</div>
+        </a>
+        <a href="about.html" style="padding: 16px 20px; background: var(--cream); color: var(--ink); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: background-color 0.2s ease;">
+          <div style="font-size: 20px; margin-bottom: 8px;">📖</div>
+          <div>About System</div>
+          <div style="font-size: 9px; color: var(--ink-muted); margin-top: 4px;">Learn More</div>
+        </a>
+      </div>
+
+      <p style="text-align: center; font-size: 13px; color: var(--ink-muted);">
+        <strong style="color: var(--navy);">PrintBridge-PaaS</strong> — IoT Cloud Printing System by Team VPS
+      </p>
+    </div>
+  </div>
+
+  <script>
+    async function loadJobs() {
+      try {
+        const res = await fetch('/api/jobs');
+        const jobs = await res.json();
+        
+        document.getElementById('totalJobs').textContent = jobs.length;
+        document.getElementById('pendingPayments').textContent = jobs.filter(j => j.paymentStatus === 'unpaid').length;
+        document.getElementById('approvedJobs').textContent = jobs.filter(j => j.status === 'approved').length;
+        
+        const container = document.getElementById('jobsContainer');
+        
+        if (jobs.length === 0) {
+          container.innerHTML = '<div class="no-jobs">No jobs available</div>';
+          return;
+        }
+        
+        container.innerHTML = '';
+        
+        jobs.sort((a, b) => {
+          if (a.paymentStatus === 'unpaid' && b.paymentStatus === 'paid') return -1;
+          if (a.paymentStatus === 'paid' && b.paymentStatus === 'unpaid') return 1;
+          return b.id - a.id;
+        });
+        
+        jobs.forEach(job => {
+          const card = document.createElement('div');
+          card.className = `job-card ${job.paymentStatus}`;
+          
+          const statusBadge = job.paymentStatus === 'paid' ? '<span class="badge paid">Paid</span>' : '<span class="badge unpaid">Unpaid</span>';
+          const approvalBadge = job.status === 'approved' ? '<span class="badge approved">Approved</span>' : '<span class="badge pending">Pending</span>';
+          const printedBadge = job.printed ? '<span class="badge printed">Printed</span>' : '';
+          
+          const amount = (job.pageCount * (job.isColor ? 5 : 2)).toFixed(2);
+          const uploadDate = new Date(job.id).toLocaleString('en-IN');
+          const printedDate = job.printedAt ? new Date(job.printedAt).toLocaleString('en-IN') : 'Not yet';
+          const ticketNumber = job.ticketNumber || 'N/A';  // Backward compatible
+          
+          card.innerHTML = `
+            <div class="job-header">
+              <div class="job-id">Ticket #${ticketNumber} • Job #${job.id}</div>
+              <div class="badges">${statusBadge}${approvalBadge}${printedBadge}</div>
+            </div>
+            <div class="job-details">
+              <div class="detail-row">
+                <span class="detail-label">Ticket Number</span>
+                <span class="detail-value">#${ticketNumber}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Pages</span>
+                <span class="detail-value">${job.pageCount}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Print Mode</span>
+                <span class="detail-value">${job.isColor ? 'Color' : 'Black & White'}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Amount</span>
+                <span class="detail-value">₹${amount}</span>
+              </div>
+              ${job.paymentId ? `<div class="detail-row"><span class="detail-label">Payment ID</span><span class="detail-value">${job.paymentId}</span></div>` : ''}
+              <div class="detail-row">
+                <span class="detail-label">Uploaded</span>
+                <span class="detail-value">${uploadDate}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Printed</span>
+                <span class="detail-value">${printedDate}</span>
+              </div>
+            </div>
+            <div id="actions-${job.id}">
+              ${job.printed
+                ? '<div class="ready-status">✓ Printed Successfully - Ticket #' + ticketNumber + '</div>'
+                : job.paymentStatus === 'unpaid' 
+                ? `<div class="job-actions"><button class="btn-approve" onclick="approvePayment(${job.id})">Approve Payment</button><button class="btn-reject" onclick="rejectPayment(${job.id})">Reject</button></div>`
+                : job.status === 'pending'
+                ? `<div class="job-actions"><button class="btn-approve" onclick="approveJob(${job.id})">Approve for Printing</button></div>`
+                : '<div class="ready-status">Waiting for Printer Agent... (Ticket #' + ticketNumber + ')</div>'
+              }
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Error loading jobs:', error);
+      }
+    }
+
+    async function approvePayment(jobId) {
+      if (!confirm('Approve this payment?')) return;
+      try {
+        const res = await fetch(`/api/approve/${jobId}`, { method: 'POST' });
+        if (res.ok) {
+          alert('Payment approved');
+          loadJobs();
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    async function rejectPayment(jobId) {
+      if (!confirm('Reject this payment?')) return;
+      alert('Payment rejected');
+    }
+
+    async function approveJob(jobId) {
+      if (!confirm('Approve this job for printing?')) return;
+      try {
+        const res = await fetch(`/api/approve/${jobId}`, { method: 'POST' });
+        if (res.ok) {
+          alert('Job approved for printing');
+          loadJobs();
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    setInterval(loadJobs, 5000);
+    loadJobs();
+  </script>
+</body>
+</html>

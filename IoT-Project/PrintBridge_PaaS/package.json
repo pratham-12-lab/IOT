@@ -1,0 +1,36 @@
+{
+  "name": "printbridge-paas",
+  "version": "1.0.0",
+  "description": "IoT-Based Cloud Printing Platform - Printer as a Service",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "printer-agent": "node printer-agent/agent.js"
+  },
+  "keywords": [
+    "iot",
+    "printing",
+    "cloud",
+    "arduino",
+    "paas"
+  ],
+  "author": "Team VPS",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cloudinary": "^1.41.0",
+    "dotenv": "^16.3.1",
+    "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.13.0",
+    "uuid": "^9.0.1",
+    "axios": "^1.6.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

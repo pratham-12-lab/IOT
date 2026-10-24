@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About PrintBridge-PaaS | IoT Cloud Printing System</title>
+  <link rel="icon" type="image/png" href="P2P_FAVICON.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared-nav.css">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --ink-muted: #7a7a7a;
+      --paper: #faf9f6;
+      --cream: #f2efe8;
+      --rule: #d8d4c8;
+      --saffron: #d97706;
+      --green: #059669;
+      --navy: #1e293b;
+      --gold: #ca8a04;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    /* Sections */
+    section {
+      min-height: 100vh;
+      padding: 100px 20px 60px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--saffron);
+      margin-bottom: 16px;
+    }
+
+    h1, h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+    }
+
+    h1 { font-size: 48px; margin-bottom: 16px; }
+    h2 { font-size: 36px; margin-bottom: 24px; }
+    h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--navy); }
+
+    .subtitle {
+      font-size: 18px;
+      color: var(--ink-soft);
+      max-width: 700px;
+      margin: 0 auto 32px;
+    }
+
+    /* Hero Section */
+    #hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      border: 1px solid;
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: var(--paper);
+      border-color: var(--navy);
+    }
+
+    .btn-primary:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--rule);
+    }
+
+    .btn-secondary:hover {
+      background: var(--cream);
+      border-color: var(--ink-muted);
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      margin-bottom: 48px;
+    }
+
+    .feature {
+      background: var(--cream);
+      padding: 32px;
+      transition: background-color 0.2s ease;
+    }
+
+    .feature:hover {
+      background: var(--paper);
+    }
+
+    .feature h3 {
+      margin-bottom: 12px;
+    }
+
+    .feature p {
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    /* Flow Steps */
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .step {
+      background: var(--cream);
+      padding: 28px;
+      transition: background-color 0.2s ease;
+    }
+
+    .step:hover {
+      background: var(--paper);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .step-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--saffron);
+      min-width: 32px;
+    }
+
+    .step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .step-desc {
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      padding-left: 44px;
+    }
+
+    .component {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--navy);
+      background: var(--paper);
+      padding: 2px 8px;
+      border: 1px solid var(--rule);
+    }
+
+    .highlight {
+      color: var(--saffron);
+      font-weight: 600;
+    }
+
+    /* Tech Stack */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .tech-item {
+      background: var(--paper);
+      padding: 20px;
+      text-align: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .tech-item:hover {
+      background: var(--cream);
+    }
+
+    .tech-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--saffron);
+      margin-bottom: 8px;
+    }
+
+    .tech-value {
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+
+    /* Architecture Diagram */
+    .diagram-box {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .diagram-box h3 {
+      margin-bottom: 16px;
+    }
+
+    .diagram-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .diagram-box li {
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 2;
+      padding-left: 24px;
+      position: relative;
+    }
+
+    .diagram-box li:before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--saffron);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--cream);
+      border-top: 1px solid var(--rule);
+      padding: 48px 20px;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 14px;
+      color: var(--ink-soft);
+      margin-bottom: 12px;
+    }
+
+    footer a {
+      color: var(--saffron);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    footer a:hover {
+      border-bottom-color: var(--saffron);
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      h1 { font-size: 36px; }
+      h2 { font-size: 28px; }
+      section { padding: 80px 16px 40px; }
+      .features-grid, .tech-grid { grid-template-columns: 1fr; }
+      .step-desc { padding-left: 0; margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <section id="hero">
+    <div class="container">
+      <div class="section-label">Team VPS</div>
+      <h1>PrintBridge-PaaS</h1>
+      <p class="subtitle">
+        Printer as a Service | IoT Cloud Printing System<br>
+        Upload documents to cloud storage, process payments online, and print automatically on HP LaserJet P1108
+      </p>
+      <div class="cta-buttons">
+        <a href="customer.html" class="btn btn-primary">Start Printing</a>
+        <a href="thingspeak-customer.html" class="btn btn-secondary">Live Analytics</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">What We Offer</div>
+        <h2>Key Features</h2>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature">
+          <h3>Cloud Storage</h3>
+          <p>Upload PDFs securely to Cloudinary cloud storage. Access documents from anywhere with reliable CDN delivery.</p>
+        </div>
+
+        <div class="feature">
+          <h3>Smart Payments</h3>
+          <p>Pay-per-page pricing at ₹2 for black and white, ₹5 for color. Order 1-10 copies. Instant payment processing with digital receipts.</p>
+        </div>
+
+        <div class="feature">
+          <h3>IoT Verification</h3>
+          <p>Arduino Uno R4 WiFi independently verifies payments via wireless connection before triggering print jobs.</p>
+        </div>
+
+        <div class="feature">
+          <h3>Automated Printing</h3>
+          <p>Documents automatically print on HP LaserJet P1108 after payment verification. No manual intervention required.</p>
+        </div>
+
+        <div class="feature">
+          <h3>Real-Time Analytics</h3>
+          <p>Track job status, payment verification, and printing progress through ThingSpeak IoT analytics platform.</p>
+        </div>
+
+        <div class="feature">
+          <h3>Hardware Sensors</h3>
+          <p>RGB LED status indicators, buzzer feedback, and IR proximity sensor for paper detection with progressive timeout system.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Section -->
+  <section id="architecture">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">System Design</div>
+        <h2>Architecture Overview</h2>
+      </div>
+
+      <div class="diagram-box">
+        <h3>System Components</h3>
+        <ul>
+          <li><strong>Web Interface:</strong> customer.html (user portal), index.html (admin panel)</li>
+          <li><strong>Server:</strong> Node.js + Express (handles uploads, payments, API)</li>
+          <li><strong>Arduino R4 WiFi:</strong> IoT payment verifier (polls server, verifies payments)</li>
+          <li><strong>Hardware Sensors:</strong> RGB LED, Buzzer, IR Proximity Sensor</li>
+          <li><strong>Printer Agent:</strong> Downloads files and sends to HP LaserJet P1108</li>
+          <li><strong>Cloudinary:</strong> Cloud storage for uploaded PDFs</li>
+          <li><strong>ThingSpeak:</strong> IoT analytics platform for real-time monitoring</li>
+          <li><strong>HP LaserJet P1108:</strong> Physical printer (USB connected to computer)</li>
+        </ul>
+      </div>
+
+      <div class="diagram-box">
+        <h3>Why This is IoT</h3>
+        <ul>
+          <li><strong>Wireless Communication:</strong> Arduino uses WiFi (no USB to printer)</li>
+          <li><strong>Cloud Connectivity:</strong> Polls cloud server for jobs</li>
+          <li><strong>Independent Intelligence:</strong> Arduino verifies payments autonomously</li>
+          <li><strong>Distributed System:</strong> Components communicate wirelessly</li>
+          <li><strong>Sensor Integration:</strong> IR sensor, RGB LED, buzzer for smart feedback</li>
+          <li><strong>Cloud Analytics:</strong> ThingSpeak platform for real-time data visualization</li>
+          <li><strong>Scalable:</strong> Can add multiple Arduino units</li>
+          <li><strong>Remote Monitoring:</strong> Real-time status via Serial Monitor and ThingSpeak</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- System Flow Section -->
+  <section id="flow">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">How It Works</div>
+        <h2>Complete System Flow</h2>
+        <p class="subtitle">From upload to printing in 12 automated steps</p>
+      </div>
+
+      <div class="flow-steps">
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">01</span>
+            <h3 class="step-title">User Uploads PDF</h3>
+          </div>
+          <p class="step-desc">
+            User opens <span class="component">customer.html</span> and selects a PDF file.
+            The file is uploaded to <span class="component">Cloudinary</span> cloud storage with secure CDN delivery.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">02</span>
+            <h3 class="step-title">PDF Analysis & Page Count</h3>
+          </div>
+          <p class="step-desc">
+            Server analyzes the PDF using <span class="component">pdf-parse</span> library.
+            Counts total pages (e.g., <span class="highlight">5 pages</span>).
+            Creates a job with status: <span class="highlight">pending</span>, payment: <span class="highlight">unpaid</span>.
+            Generates unique <span class="highlight">ticket number</span> starting from 1000.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">03</span>
+            <h3 class="step-title">User Selects Print Options</h3>
+          </div>
+          <p class="step-desc">
+            User chooses: <span class="highlight">Black & White (₹2/page)</span> or <span class="highlight">Color (₹5/page)</span>.
+            Selects number of copies (1-10).
+            System calculates total price: <span class="highlight">(Pages × Price) × Copies</span>.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">04</span>
+            <h3 class="step-title">Payment Processing</h3>
+          </div>
+          <p class="step-desc">
+            User enters email and processes payment through multi-method gateway (UPI, Card, Net Banking).
+            Server generates <span class="component">Payment ID</span> and <span class="component">Receipt</span>.
+            Updates job: status → approved, payment → paid.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">05</span>
+            <h3 class="step-title">Arduino Polls Server</h3>
+          </div>
+          <p class="step-desc">
+            <span class="component">Arduino Uno R4 WiFi</span> continuously polls server via WiFi every 5 seconds.
+            Sends request: <span class="component">GET /api/jobs</span>.
+            Looks for jobs with: status = approved AND payment = paid.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">06</span>
+            <h3 class="step-title">Arduino Detects Paid Job</h3>
+          </div>
+          <p class="step-desc">
+            Arduino finds the paid job in server response.
+            Extracts: Job ID, Ticket Number, Payment ID, File URL.
+            Displays on Serial Monitor with banner.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">07</span>
+            <h3 class="step-title">Arduino Verifies Payment</h3>
+          </div>
+          <p class="step-desc">
+            Arduino makes independent verification: <span class="component">GET /api/receipt/:paymentId</span>.
+            Checks if payment is legitimate. If verified, proceeds to print.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">08</span>
+            <h3 class="step-title">Hardware Sensors & Feedback</h3>
+          </div>
+          <p class="step-desc">
+            RGB LED shows status (Green=idle, Blue=printing, Yellow=waiting, Red=error).
+            Buzzer provides audio feedback. IR Proximity Sensor detects paper removal.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">09</span>
+            <h3 class="step-title">Printer Agent Downloads File</h3>
+          </div>
+          <p class="step-desc">
+            <span class="component">printer-agent/agent.js</span> running on computer detects the paid job.
+            Downloads PDF from Cloudinary URL.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">10</span>
+            <h3 class="step-title">Print on HP LaserJet P1108</h3>
+          </div>
+          <p class="step-desc">
+            Printer agent sends file to <span class="component">HP LaserJet P1108</span>.
+            Document prints with selected options (B&W or Color) for all copies.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">11</span>
+            <h3 class="step-title">ThingSpeak Analytics Update</h3>
+          </div>
+          <p class="step-desc">
+            Server automatically updates <span class="component">ThingSpeak IoT Platform</span> every 15 seconds.
+            Tracks: Total Jobs, Pages, Revenue, Queue, Color Ratio, Latest Ticket, Printer Status, Paper Status.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-number">12</span>
+            <h3 class="step-title">Success</h3>
+          </div>
+          <p class="step-desc">
+            User receives printed document. Receipt with ticket number saved in browser.
+            Job marked as completed. Ready for next print job.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Section -->
+  <section id="technology">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Built With</div>
+        <h2>Technology Stack</h2>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-label">Frontend</div>
+          <div class="tech-value">HTML5, CSS3, JavaScript</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-label">Backend</div>
+          <div class="tech-value">Node.js, Express</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-label">IoT Hardware</div>
+          <div class="tech-value">Arduino Uno R4 WiFi</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-label">Cloud Storage</div>
+          <div class="tech-value">Cloudinary API</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-label">IoT Analytics</div>
+          <div class="tech-value">ThingSpeak Platform</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-label">Hosting</div>
+          <div class="tech-value">Render Cloud</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-label">Printer</div>
+          <div class="tech-value">HP LaserJet P1108</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-label">Sensors</div>
+          <div class="tech-value">IR, RGB LED, Buzzer</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-label">PDF Processing</div>
+          <div class="tech-value">pdf-parse, SumatraPDF</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 48px;">
+        <a href="customer.html" class="btn btn-primary">Start Printing Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p><strong>PrintBridge-PaaS</strong> — Printer as a Service | IoT Cloud Printing System</p>
+    <p style="margin-top: 12px;">Developed by Team VPS</p>
+  </footer>
+
+  <script src="shared-nav.js"></script>
+  <script>
+    // Reveal sections on scroll
+    const sections = document.querySelectorAll('section');
+    
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+
+    // Initial visibility for hero
+    const heroSection = document.getElementById('hero');
+    if (heroSection) {
+      heroSection.classList.add('visible');
+    }
+  </script>
+</body>
+</html>

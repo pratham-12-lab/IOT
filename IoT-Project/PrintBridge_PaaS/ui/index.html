@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | PrintBridge-PaaS</title>
+  <link rel="icon" type="image/png" href="P2P_FAVICON.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared-nav.css">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --ink-muted: #7a7a7a;
+      --paper: #faf9f6;
+      --cream: #f2efe8;
+      --rule: #d8d4c8;
+      --saffron: #d97706;
+      --green: #059669;
+      --navy: #1e293b;
+      --gold: #ca8a04;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 100px 20px 40px;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .team-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle { font-size: 16px; color: var(--ink-soft); }
+
+    .jobs-container { display: grid; gap: 16px; }
+
+    .job {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      padding: 24px;
+      transition: border-color 0.2s ease;
+    }
+
+    .job:hover { border-color: var(--ink-muted); }
+    .job.paid { border-left: 2px solid var(--green); }
+    .job.pending { border-left: 2px solid var(--gold); }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .job-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .badges { display: flex; gap: 8px; }
+
+    .status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid;
+    }
+
+    .status.paid { background: #f0fdf4; border-color: var(--green); color: var(--green); }
+    .status.unpaid { background: #fffbeb; border-color: var(--gold); color: var(--gold); }
+    .status.approved { background: #eff6ff; border-color: #3b82f6; color: #3b82f6; }
+
+    .job-details {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    .no-jobs {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-muted);
+      font-size: 15px;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 84px 16px 24px; }
+      h1 { font-size: 32px; }
+      .job { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="team-label">Team VPS</div>
+      <h1>Admin Panel</h1>
+      <p class="subtitle">Job Monitoring Dashboard</p>
+    </header>
+
+    <!-- Shop Status Control -->
+    <div style="background: var(--cream); border: 2px solid var(--saffron); padding: 24px; margin-bottom: 32px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div>
+          <div style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 4px;">
+            Shop Status Control
+          </div>
+          <div style="font-size: 13px; color: var(--ink-soft);">
+            Control whether customers can upload new print jobs
+          </div>
+        </div>
+        <div id="shopStatusIndicator" style="
+          padding: 8px 16px;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          border: 1px solid;
+        ">
+          Loading...
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <button onclick="setShopOpen()" id="openBtn" style="
+          flex: 1;
+          padding: 14px;
+          background: var(--green);
+          color: white;
+          border: none;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: opacity 0.2s ease;
+        ">
+          Open Shop
+        </button>
+        <button onclick="setShopClosed()" id="closeBtn" style="
+          flex: 1;
+          padding: 14px;
+          background: #dc2626;
+          color: white;
+          border: none;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: opacity 0.2s ease;
+        ">
+          Close Shop
+        </button>
+      </div>
+      <div id="shopStatusMessage" style="
+        margin-top: 12px;
+        font-size: 13px;
+        color: var(--ink-soft);
+        text-align: center;
+      "></div>
+    </div>
+
+    <div class="jobs-container" id="jobs"></div>
+
+    <!-- Footer -->
+    <div style="margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--rule); text-align: center;">
+      <p style="font-size: 13px; color: var(--ink-muted);">
+        <strong style="color: var(--navy);">PrintBridge-PaaS</strong> — IoT Cloud Printing System by Team VPS
+      </p>
+    </div>
+  </div>
+
+  <script src="shared-nav.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

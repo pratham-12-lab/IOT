@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrintBridge-PaaS | IoT Cloud Printing System</title>
+  <link rel="icon" type="image/png" href="P2P_FAVICON.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --ink-muted: #7a7a7a;
+      --paper: #faf9f6;
+      --cream: #f2efe8;
+      --rule: #d8d4c8;
+      --saffron: #d97706;
+      --green: #059669;
+      --navy: #1e293b;
+      --gold: #ca8a04;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .team-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: var(--ink-soft);
+      font-weight: 400;
+    }
+
+    .section {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      padding: 32px;
+      margin-bottom: 24px;
+      transition: border-color 0.2s ease;
+    }
+
+    .section:hover {
+      border-color: var(--ink-muted);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--saffron);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input[type="file"],
+    input[type="email"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      font-family: 'Source Serif 4', serif;
+      font-size: 15px;
+      color: var(--ink);
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .option-group {
+      display: grid;
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      margin-bottom: 24px;
+    }
+
+    .option {
+      background: var(--paper);
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option:hover {
+      background: var(--cream);
+    }
+
+    .option.selected {
+      background: var(--cream);
+      border-left: 2px solid var(--saffron);
+    }
+
+    .option input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .option-label {
+      flex: 1;
+      font-size: 15px;
+      color: var(--ink);
+    }
+
+    .option-price {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+
+    .price-summary {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .price-summary-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 16px;
+    }
+
+    .price-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 15px;
+      color: var(--ink-soft);
+    }
+
+    .price-line.total {
+      border-top: 1px solid var(--rule);
+      margin-top: 12px;
+      padding-top: 16px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .price-line.total .amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      color: var(--saffron);
+    }
+
+    button {
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--navy);
+      color: var(--paper);
+      border: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--ink);
+    }
+
+    button:disabled {
+      background: var(--rule);
+      color: var(--ink-muted);
+      cursor: not-allowed;
+    }
+
+    .status-message {
+      padding: 16px 20px;
+      border: 1px solid var(--rule);
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    .status-message.success {
+      background: #f0fdf4;
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .status-message.error {
+      background: #fef2f2;
+      border-color: #dc2626;
+      color: #dc2626;
+    }
+
+    .status-message.info {
+      background: #fffbeb;
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .receipt {
+      background: var(--paper);
+      border: 2px dashed var(--rule);
+      padding: 24px;
+      margin-top: 20px;
+    }
+
+    .receipt-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 20px;
+      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .receipt-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .receipt-line:last-child {
+      border-bottom: none;
+    }
+
+    .receipt-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--ink-soft);
+    }
+
+    .receipt-value {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 24px 16px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .section {
+        padding: 24px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="shared-nav.css">
+</head>
+<body>
+  <!-- Demo Mode Banner -->
+  <div id="demoBanner" style="
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    border-top: 4px solid #991b1b;
+    border-bottom: 4px solid #991b1b;
+    color: white;
+    padding: 20px 24px;
+    text-align: center;
+    font-family: 'Source Serif 4', serif;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+    display: none;
+    margin-bottom: 24px;
+  ">
+    <div style="
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    ">⚠️ Important Privacy Notice</div>
+    
+    <div style="
+      font-size: 15px;
+      line-height: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      font-weight: 400;
+    ">
+      <strong>Demo Mode Active:</strong> In production, uploaded files are stored on Cloudinary servers. 
+      To respect your document's privacy and for security purposes, we've disabled actual file uploads. 
+      Please use the sample PDFs provided below to explore the complete workflow.
+    </div>
+    
+    <div style="
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 13px;
+      opacity: 0.95;
+    ">
+      💡 Want to see the full code? Visit our 
+      <a href="https://github.com/VA-run23/IoT-Project" target="_blank" style="
+        color: white;
+        text-decoration: underline;
+        font-weight: 600;
+      ">GitHub Repository</a> 
+      or explore the codebase to understand how it works!
+    </div>
+  </div>
+
+  <!-- Shop Status Banner -->
+  <div id="shop-status-banner"></div>
+  
+  <div class="container">
+    <header>
+      <div class="team-label">Team VPS</div>
+      <h1>PrintBridge-PaaS</h1>
+      <p class="subtitle">Printer as a Service | IoT Cloud Printing System</p>
+    </header>
+
+    <div class="section" id="step1">
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2 class="section-title">Document Upload</h2>
+      </div>
+      
+      <div class="form-group">
+        <label>Upload Type</label>
+        <div class="option-group">
+          <div class="option selected" onclick="selectUploadType('pdf')">
+            <input type="radio" name="uploadType" value="pdf" checked onclick="event.stopPropagation()">
+            <span class="option-label">PDF Document</span>
+          </div>
+          <div class="option" onclick="selectUploadType('images')">
+            <input type="radio" name="uploadType" value="images" onclick="event.stopPropagation()">
+            <span class="option-label">Images</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="pdfUploadSection">
+        <div class="form-group">
+          <label>Choose Sample Document (Demo Mode)</label>
+          <p style="
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+            border-radius: 4px;
+          ">
+            🔒 <strong>Security Notice:</strong> For your privacy and security, file uploads are disabled in demo mode. 
+            Please use one of our sample documents below to experience the complete workflow.
+          </p>
+          
+          <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+          ">
+            <button onclick="selectSamplePDF('2_Paged_Document.pdf', 2)" style="
+              padding: 16px;
+              background: var(--cream);
+              border: 2px solid var(--rule);
+              cursor: pointer;
+              transition: all 0.2s ease;
+              text-align: left;
+            " onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--rule)'">
+              <div style="font-size: 24px; margin-bottom: 8px;">📄</div>
+              <div style="
+                font-family: 'Source Serif 4', serif;
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--navy);
+                margin-bottom: 4px;
+              ">2-Page Document</div>
+              <div style="font-size: 12px; color: var(--ink-muted);">Sample Resume</div>
+            </button>
+
+            <button onclick="selectSamplePDF('5_Paged_Document.pdf', 5)" style="
+              padding: 16px;
+              background: var(--cream);
+              border: 2px solid var(--rule);
+              cursor: pointer;
+              transition: all 0.2s ease;
+              text-align: left;
+            " onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--rule)'">
+              <div style="font-size: 24px; margin-bottom: 8px;">📑</div>
+              <div style="
+                font-family: 'Source Serif 4', serif;
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--navy);
+                margin-bottom: 4px;
+              ">5-Page Document</div>
+              <div style="font-size: 12px; color: var(--ink-muted);">Sample Report</div>
+            </button>
+
+            <button onclick="selectSamplePDF('10_Paged_Document.pdf', 10)" style="
+              padding: 16px;
+              background: var(--cream);
+              border: 2px solid var(--rule);
+              cursor: pointer;
+              transition: all 0.2s ease;
+              text-align: left;
+            " onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--rule)'">
+              <div style="font-size: 24px; margin-bottom: 8px;">📚</div>
+              <div style="
+                font-family: 'Source Serif 4', serif;
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--navy);
+                margin-bottom: 4px;
+              ">10-Page Document</div>
+              <div style="font-size: 12px; color: var(--ink-muted);">Sample Project</div>
+            </button>
+          </div>
+
+          <div style="
+            padding: 12px;
+            background: var(--cream);
+            border: 1px solid var(--rule);
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--ink-muted);
+            text-align: center;
+            margin-bottom: 20px;
+          ">
+            💡 <strong>Tip:</strong> In production mode, you can upload your own PDFs. Demo mode uses pre-made samples for security.
+          </div>
+          
+          <!-- Disabled file input (visible but disabled in demo mode) -->
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 2px dashed var(--rule);">
+            <label style="opacity: 0.5;">Or Upload Your Own PDF (Disabled in Demo)</label>
+            <input 
+              type="file" 
+              id="fileInput" 
+              accept="application/pdf,.pdf" 
+              disabled
+              style="
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px dashed var(--rule);
+                background: #f5f5f5;
+                font-family: 'Source Serif 4', serif;
+                font-size: 15px;
+                color: var(--ink-muted);
+                cursor: not-allowed;
+                opacity: 0.6;
+              "
+            >
+            <div style="
+              font-size: 11px;
+              color: var(--ink-muted);
+              margin-top: 8px;
+              font-style: italic;
+            ">
+              File upload is disabled in demo mode to protect your document privacy
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="imageUploadSection" class="hidden">
+        <div class="form-group">
+          <label for="imageInput">Select Images (Multiple)</label>
+          <input type="file" id="imageInput" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" multiple>
+          <div style="font-size: 12px; color: var(--ink-muted); margin-top: 6px;">
+            You can select multiple images at once (JPG, PNG, GIF, WebP)
+          </div>
+        </div>
+
+        <div id="imagePreview" style="margin-top: 16px;"></div>
+
+        <div class="form-group">
+          <label>Images Per Page</label>
+          <div class="option-group">
+            <div class="option selected" onclick="selectImagesPerPage(1)">
+              <input type="radio" name="imagesPerPage" value="1" checked onclick="event.stopPropagation()">
+              <span class="option-label">1 image</span>
+            </div>
+            <div class="option" onclick="selectImagesPerPage(2)">
+              <input type="radio" name="imagesPerPage" value="2" onclick="event.stopPropagation()">
+              <span class="option-label">2 images</span>
+            </div>
+            <div class="option" onclick="selectImagesPerPage(4)">
+              <input type="radio" name="imagesPerPage" value="4" onclick="event.stopPropagation()">
+              <span class="option-label">4 images</span>
+            </div>
+            <div class="option" onclick="selectImagesPerPage(9)">
+              <input type="radio" name="imagesPerPage" value="9" onclick="event.stopPropagation()">
+              <span class="option-label">9 images</span>
+            </div>
+            <div class="option" onclick="selectImagesPerPage(16)">
+              <input type="radio" name="imagesPerPage" value="16" onclick="event.stopPropagation()">
+              <span class="option-label">16 images</span>
+            </div>
+          </div>
+          <div style="font-size: 12px; color: var(--ink-muted); margin-top: 6px;">
+            Choose how many images to fit on each page
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto-Delete Notice -->
+      <div class="form-group" style="margin-top: 24px;">
+        <div style="
+          background: #d1fae5;
+          border: 2px solid #059669;
+          padding: 16px;
+          text-align: center;
+        ">
+          <div style="
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #059669;
+            margin-bottom: 8px;
+          ">🗑️ Automatic File Deletion</div>
+          <div style="
+            font-size: 13px;
+            color: #047857;
+            line-height: 1.6;
+          ">
+            Your file will be automatically deleted from our servers <strong>immediately after printing</strong> for your privacy and security
+          </div>
+        </div>
+      </div>
+
+      <button onclick="uploadFile()">Upload to Cloud</button>
+      <div id="uploadStatus"></div>
+    </div>
+
+    <div class="section hidden" id="step2">
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2 class="section-title">Print Configuration</h2>
+      </div>
+
+      <div class="status-message success">
+        Document uploaded successfully to cloud storage
+      </div>
+
+      <div class="form-group" style="margin-top: 24px;">
+        <label>Print Mode</label>
+        <div class="option-group">
+          <div class="option selected" onclick="selectOption('bw')">
+            <input type="radio" name="colorOption" value="bw" checked onchange="calculatePrice()">
+            <span class="option-label">Black & White</span>
+            <span class="option-price">₹2 per page</span>
+          </div>
+          <div class="option" onclick="selectOption('color')">
+            <input type="radio" name="colorOption" value="color" onchange="calculatePrice()">
+            <span class="option-label">Color</span>
+            <span class="option-price">₹5 per page</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="copiesInput">Number of Copies (1-10)</label>
+        <input type="number" id="copiesInput" placeholder="Enter number of copies (1-10)" onblur="validateCopies(this)" style="
+          width: 100%;
+          padding: 12px 16px;
+          border: 1px solid var(--rule);
+          background: var(--paper);
+          font-family: 'Source Serif 4', serif;
+          font-size: 15px;
+          color: var(--ink);
+          transition: border-color 0.2s ease;
+        ">
+        <div style="font-size: 12px; color: var(--ink-muted); margin-top: 6px;">
+          Get multiple copies of the same document (maximum 10 copies)
+        </div>
+      </div>
+
+      <div class="price-summary">
+        <div class="price-summary-title">Price Calculation</div>
+        <div class="price-line">
+          <span>Total Pages</span>
+          <strong id="displayPages">—</strong>
+        </div>
+        <div class="price-line">
+          <span>Number of Copies</span>
+          <strong id="displayCopies">1 (default)</strong>
+        </div>
+        <div class="price-line">
+          <span>Price per Page</span>
+          <strong id="displayPricePerPage">—</strong>
+        </div>
+        <div class="price-line">
+          <span>Subtotal (1 copy)</span>
+          <strong id="displaySubtotal">₹0.00</strong>
+        </div>
+        <div class="price-line total">
+          <span>Total Amount</span>
+          <span class="amount" id="displayTotal">₹0.00</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="emailInput">Email Address</label>
+        <input type="email" id="emailInput" placeholder="your.email@example.com" required>
+      </div>
+
+      <button onclick="processPayment()">Process Payment</button>
+      <div id="paymentStatus"></div>
+    </div>
+
+    <div class="section hidden" id="step3">
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2 class="section-title">Payment Confirmed</h2>
+      </div>
+
+      <div class="receipt" id="receiptContainer"></div>
+
+      <!-- Estimated Time Section -->
+      <div id="estimatedTimeSection" class="status-message info" style="margin-top: 20px; display: none;">
+        <div style="
+          font-family: 'Playfair Display', serif;
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--navy);
+          margin-bottom: 16px;
+          text-align: center;
+        ">⏱️ Estimated Time to Print</div>
+        
+        <div style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 16px;
+        ">
+          <div style="
+            background: var(--paper);
+            border: 2px solid var(--gold);
+            padding: 16px;
+            text-align: center;
+          ">
+            <div style="
+              font-family: 'JetBrains Mono', monospace;
+              font-size: 11px;
+              font-weight: 600;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              color: var(--ink-soft);
+              margin-bottom: 8px;
+            ">Currently Printing</div>
+            <div style="
+              font-family: 'Playfair Display', serif;
+              font-size: 32px;
+              font-weight: 700;
+              color: var(--navy);
+            " id="currentPrintingTicket">—</div>
+          </div>
+          
+          <div style="
+            background: var(--paper);
+            border: 2px solid var(--saffron);
+            padding: 16px;
+            text-align: center;
+          ">
+            <div style="
+              font-family: 'JetBrains Mono', monospace;
+              font-size: 11px;
+              font-weight: 600;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              color: var(--ink-soft);
+              margin-bottom: 8px;
+            ">Your Ticket</div>
+            <div style="
+              font-family: 'Playfair Display', serif;
+              font-size: 32px;
+              font-weight: 700;
+              color: var(--saffron);
+            " id="yourTicketNumber">—</div>
+          </div>
+        </div>
+        
+        <div style="
+          background: var(--cream);
+          border: 1px solid var(--rule);
+          padding: 16px;
+          text-align: center;
+        ">
+          <div style="
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 8px;
+          ">Estimated Wait Time</div>
+          <div style="
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--navy);
+          " id="estimatedWaitTime">Calculating...</div>
+          <div style="
+            font-size: 12px;
+            color: var(--ink-muted);
+            margin-top: 8px;
+          " id="queueInfo">—</div>
+        </div>
+      </div>
+
+      <div class="status-message success" style="margin-top: 20px;">
+        Document queued for printing on HP LaserJet P1108
+      </div>
+
+      <div class="status-message info" style="margin-top: 12px;">
+        Arduino IoT controller verifying payment and triggering print job
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div style="margin-top: 64px; padding-top: 48px; border-top: 2px solid var(--rule);">
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); text-align: center; margin-bottom: 40px;">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          How does PrintBridge-PaaS work?
+        </h3>
+        <p style="font-size: 15px; color: var(--ink-soft); line-height: 1.8;">
+          Upload your PDF to Cloudinary cloud storage, select print options (B&W or Color), pay online, and our Arduino Uno R4 WiFi independently verifies the payment before automatically printing on HP LaserJet P1108. You receive a unique ticket number for tracking.
+        </p>
+      </div>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          What are the pricing rates?
+        </h3>
+        <p style="font-size: 15px; color: var(--ink-soft); line-height: 1.8;">
+          <strong style="color: var(--navy);">Black & White:</strong> ₹2 per page<br>
+          <strong style="color: var(--navy);">Color:</strong> ₹5 per page<br>
+          <strong style="color: var(--navy);">Multiple Copies:</strong> You can order 1-10 copies of the same document<br>
+          Payment is calculated automatically: (Pages × Price per Page) × Number of Copies
+        </p>
+      </div>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          What is a ticket number?
+        </h3>
+        <p style="font-size: 15px; color: var(--ink-soft); line-height: 1.8;">
+          Each print job receives a unique sequential ticket number starting from 1000. This helps you track your job and ensures proper order management. Your ticket number appears on your receipt.
+        </p>
+      </div>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          How long does printing take?
+        </h3>
+        <p style="font-size: 15px; color: var(--ink-soft); line-height: 1.8;">
+          After payment confirmation, the Arduino polls the server every 5 seconds. Once detected and verified, printing begins immediately. Total time: typically 10-30 seconds from payment to print start.
+        </p>
+      </div>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          Is my payment secure?
+        </h3>
+        <p style="font-size: 15px; color: var(--ink-soft); line-height: 1.8;">
+          Yes! We use multi-layer verification: payment gateway validation, Arduino independent verification, and server-side authorization. Complete audit trail is maintained for all transactions.
+        </p>
+      </div>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          What file formats are supported?
+        </h3>
+        <p style="font-size: 15px; color: var(--ink-soft); line-height: 1.8;">
+          Currently, we support PDF files only. Ensure your document is in PDF format before uploading. Maximum file size and page limits apply based on system configuration.
+        </p>
+      </div>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          Can I track my print job?
+        </h3>
+        <p style="font-size: 15px; color: var(--ink-soft); line-height: 1.8;">
+          Yes! Use the Admin Panel to view all jobs, their status, and payment information. You can also check the ThingSpeak Analytics Dashboard for real-time system metrics including the latest ticket number.
+        </p>
+      </div>
+    </div>
+
+    <!-- About the Technology -->
+    <div style="margin-top: 48px;">
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--navy); text-align: center; margin-bottom: 32px;">
+        About the Technology
+      </h2>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          IoT Cloud Printing System
+        </h3>
+        <p style="font-size: 15px; color: var(--ink-soft); line-height: 1.8; margin-bottom: 16px;">
+          PrintBridge-PaaS is a true Internet of Things (IoT) solution that combines cloud computing, wireless communication, and intelligent hardware to deliver automated printing services.
+        </p>
+        <ul style="list-style: none; padding-left: 0;">
+          <li style="font-size: 15px; color: var(--ink-soft); line-height: 2; padding-left: 24px; position: relative;">
+            <span style="position: absolute; left: 0; color: var(--saffron);">—</span>
+            <strong style="color: var(--navy);">Wireless Communication:</strong> Arduino Uno R4 WiFi connects to cloud server
+          </li>
+          <li style="font-size: 15px; color: var(--ink-soft); line-height: 2; padding-left: 24px; position: relative;">
+            <span style="position: absolute; left: 0; color: var(--saffron);">—</span>
+            <strong style="color: var(--navy);">Cloud Storage:</strong> Documents stored on Cloudinary CDN
+          </li>
+          <li style="font-size: 15px; color: var(--ink-soft); line-height: 2; padding-left: 24px; position: relative;">
+            <span style="position: absolute; left: 0; color: var(--saffron);">—</span>
+            <strong style="color: var(--navy);">Independent Intelligence:</strong> Arduino verifies payments autonomously
+          </li>
+          <li style="font-size: 15px; color: var(--ink-soft); line-height: 2; padding-left: 24px; position: relative;">
+            <span style="position: absolute; left: 0; color: var(--saffron);">—</span>
+            <strong style="color: var(--navy);">Real-Time Analytics:</strong> ThingSpeak IoT platform for live monitoring
+          </li>
+          <li style="font-size: 15px; color: var(--ink-soft); line-height: 2; padding-left: 24px; position: relative;">
+            <span style="position: absolute; left: 0; color: var(--saffron);">—</span>
+            <strong style="color: var(--navy);">Hardware Sensors:</strong> RGB LED, buzzer, IR proximity sensor
+          </li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 12px;">
+          Technical Stack
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
+          <div style="background: var(--paper); border: 1px solid var(--rule); padding: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--saffron); margin-bottom: 8px;">Frontend</div>
+            <div style="font-size: 14px; color: var(--ink-soft);">HTML5, CSS3, JavaScript</div>
+          </div>
+          <div style="background: var(--paper); border: 1px solid var(--rule); padding: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--saffron); margin-bottom: 8px;">Backend</div>
+            <div style="font-size: 14px; color: var(--ink-soft);">Node.js, Express</div>
+          </div>
+          <div style="background: var(--paper); border: 1px solid var(--rule); padding: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--saffron); margin-bottom: 8px;">IoT Hardware</div>
+            <div style="font-size: 14px; color: var(--ink-soft);">Arduino Uno R4 WiFi</div>
+          </div>
+          <div style="background: var(--paper); border: 1px solid var(--rule); padding: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--saffron); margin-bottom: 8px;">Cloud Services</div>
+            <div style="font-size: 14px; color: var(--ink-soft);">Cloudinary, ThingSpeak, Render</div>
+          </div>
+          <div style="background: var(--paper); border: 1px solid var(--rule); padding: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--saffron); margin-bottom: 8px;">Printer</div>
+            <div style="font-size: 14px; color: var(--ink-soft);">HP LaserJet P1108</div>
+          </div>
+          <div style="background: var(--paper); border: 1px solid var(--rule); padding: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--saffron); margin-bottom: 8px;">Sensors</div>
+            <div style="font-size: 14px; color: var(--ink-soft);">IR, RGB LED, Buzzer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Footer -->
+      <p style="text-align: center; font-size: 14px; color: var(--ink-muted); margin-top: 32px;">
+        <strong style="color: var(--navy);">PrintBridge-PaaS</strong> — Printer as a Service | Developed by Team VPS
+      </p>
+    </div>
+  </div>
+
+  <script src="shared-nav.js"></script>
+  <script>
+    function selectOption(type) {
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      event.currentTarget.classList.add('selected');
+      document.querySelector(`input[value="${type}"]`).checked = true;
+      calculatePrice();
+    }
+
+    function validateCopies(input) {
+      let value = parseInt(input.value);
+      
+      // Check if input is empty or not a number
+      if (input.value === '' || isNaN(value)) {
+        alert('⚠️ Please enter a valid number of copies (1-10)');
+        input.value = '';
+        input.focus();
+        return;
+      }
+      
+      // Check if value is less than 1
+      if (value < 1) {
+        alert('⚠️ Number of copies must be at least 1');
+        input.value = '';
+        input.focus();
+        return;
+      }
+      
+      // Check if value is greater than 10
+      if (value > 10) {
+        alert('⚠️ Maximum 10 copies allowed');
+        input.value = '';
+        input.focus();
+        return;
+      }
+      
+      // Valid input - recalculate price
+      calculatePrice();
+    }
+  </script>
+  <script src="customer-security.js"></script>
+  <script src="customer.js"></script>
+  
+  <!-- Demo Mode Check -->
+  <script>
+    // Check if demo mode is active
+    fetch('/api/demo-status')
+      .then(res => res.json())
+      .then(data => {
+        if (data.demoMode) {
+          document.getElementById('demoBanner').style.display = 'block';
+          console.log('🎭 Demo Mode Active:', data.message);
+        }
+      })
+      .catch(err => console.log('Demo status check:', err.message));
+  </script>
+</body>
+</html>

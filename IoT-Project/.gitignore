@@ -1,0 +1,37 @@
+# IDE
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.local
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Downloaded PDFs
+printer-agent/downloads/*.pdf
+printer-agent/downloads/
+
+# Printed jobs history (runtime data)
+printer-agent/printed-jobs.json
+
+printbridge/REMOVED__/PrintBridge_IoT_Controller.ino
+printbridge/REMOVED__/PrintBridge_R4_WiFi.ino
+printbridge/REMOVED__/PrintBridge_Simple.ino
+
+# Documentation and guide files directory
+printbridge/TXTs_and_MDs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
